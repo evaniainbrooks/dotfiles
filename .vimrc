@@ -1,6 +1,3 @@
-" This is Gary Bernhardt's .vimrc file
-" vim:set ts=2 sts=2 sw=2 expandtab:
-
 " remove all existing autocmds
 autocmd!
 
@@ -100,7 +97,7 @@ augroup vimrcEx
   autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
   autocmd FileType python set sw=4 sts=4 et
 
-  autocmd! BufRead,BufNewFile *.sass setfiletype sass 
+  autocmd! BufRead,BufNewFile *.sass setfiletype sass
 
   autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
   autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
@@ -126,8 +123,8 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-:set t_Co=256 " 256 colors
-:set background=dark
+":set t_Co=256 " 256 colors
+":set background=dark
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -152,10 +149,10 @@ nnoremap <leader><leader> <c-^>
 nnoremap <leader>s :call FocusOnFile()<cr>
 function! FocusOnFile()
   tabnew %
-  normal! v
-  normal! l
+  normalv
+  normall
   call OpenTestAlternate()
-  normal! h
+  normalh
 endfunction
 " Reload in chrome
 map <leader>l :w\|:silent !reload-chrome<cr>
@@ -176,6 +173,8 @@ function! InsertTabWrapper()
 endfunction
 inoremap <expr> <tab> InsertTabWrapper()
 inoremap <s-tab> <c-n>
+imap jk <Esc>
+imap kj <Esc>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
@@ -273,7 +272,7 @@ function! ShowRoutes()
   " Put routes output in buffer
   :0r! rake -s routes
   " Size window to number of lines (1 plus rake output length)
-  :exec ":normal " . line("$") . "_ "
+  :exec ":normal " . line("$") . _ "
   " Move cursor to bottom
   :normal 1GG
   " Delete empty trailing line
@@ -526,3 +525,18 @@ function! SelectaIdentifier()
   call SelectaCommand("find * -type f", "-s " . @z, ":e")
 endfunction
 nnoremap <c-g> :call SelectaIdentifier()<cr>
+" Remove whitespace and special chars
+autocmd BufWritePre * %s/\s\+$//e
+set list
+set listchars=tab:␉·,trail:␠,nbsp:⎵
+" jbuilder syntax
+au BufNewFile,BufRead *.json.jbuilder set ft=ruby
+" NERDtree autofocus
+autocmd vimenter * NERDTree | wincmd w
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" ruby skeletons
+autocmd BufNewFile  *\(_spec\)\@<!.rb  0r ~/vim/skeleton.rb
+autocmd BufNewFile  *_spec.rb          0r ~/vim/skeleton_spec.rb
+
+set number! relativenumber!
