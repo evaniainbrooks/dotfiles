@@ -508,13 +508,17 @@ endfunction
 
 nnoremap <leader>f :call SelectaFile(".", "*")<cr>
 nnoremap <leader>gv :call SelectaFile("app/views", "*")<cr>
+nnoremap <leader>gvm :call SelectaFile("app/view_models", "*")<cr>
+nnoremap <leader>gjs :call SelectaFile("app/javascript", "*")<cr>
 nnoremap <leader>gc :call SelectaFile("app/controllers", "*")<cr>
 nnoremap <leader>gm :call SelectaFile("app/models", "*")<cr>
 nnoremap <leader>gh :call SelectaFile("app/helpers", "*")<cr>
+nnoremap <leader>gsp :call SelectaFile("spec", "*")<cr>
 nnoremap <leader>gl :call SelectaFile("lib", "*")<cr>
 nnoremap <leader>gp :call SelectaFile("public", "*")<cr>
 nnoremap <leader>gs :call SelectaFile("public/stylesheets", "*.sass")<cr>
 nnoremap <leader>gf :call SelectaFile("features", "*")<cr>
+nnoremap <leader>rr :!ruby %<cr>
 
 "Fuzzy select
 function! SelectaIdentifier()
@@ -532,11 +536,63 @@ set listchars=tab:␉·,trail:␠,nbsp:⎵
 " jbuilder syntax
 au BufNewFile,BufRead *.json.jbuilder set ft=ruby
 " NERDtree autofocus
-autocmd vimenter * NERDTree | wincmd w
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" autocmd vimenter * NERDTree | wincmd w
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" ruby skeletons
+" skeletons
 autocmd BufNewFile  *\(_spec\)\@<!.rb  0r ~/vim/skeleton.rb
 autocmd BufNewFile  *_spec.rb          0r ~/vim/skeleton_spec.rb
+autocmd BufNewFile  *\(\.spec\)\@<!.js  0r ~/vim/skeleton_vue_spec.js
+autocmd BufNewFile  *.js               0r ~/vim/skeleton_vue.js
 
 set number! relativenumber!
+
+" save with CTRL+s
+noremap <silent> <C-S>          :update<CR>
+vnoremap <silent> <C-S>         <C-C>:update<CR>
+inoremap <silent> <C-S>         <C-O>:update<CR>
+" quit with CTRL+q
+noremap <silent> <C-Q>          :q<CR>
+vnoremap <silent> <C-Q>         <C-C>:q<CR>
+inoremap <silent> <C-Q>         <C-O>:q<CR>
+
+" filenames like *.xml, *.html, *.xhtml, ...
+" These are the file extensions where this plugin is enabled.
+"
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
+
+" filenames like *.xml, *.xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
+
+" filetypes like xml, html, xhtml, ...
+" These are the file types where this plugin is enabled.
+"
+let g:closetag_filetypes = 'html,xhtml,phtml'
+
+" filetypes like xml, xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filetypes = 'xhtml,jsx'
+
+" integer value [0|1]
+" This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
+"
+let g:closetag_emptyTags_caseSensitive = 1
+
+" dict
+" Disables auto-close if not in a "valid" region (based on filetype)
+"
+let g:closetag_regions = {
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ }
+
+" Shortcut for closing tags, default is '>'
+"
+let g:closetag_shortcut = '>'
+
+" Add > at current position without closing the current tag, default is ''
+"
+let g:closetag_close_shortcut = '<leader>>'
